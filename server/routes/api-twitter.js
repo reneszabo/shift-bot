@@ -23,6 +23,10 @@ module.exports = function(io) {
       startStream(term);
       res.json({message: term});
     })
+    .post(function(req, res) {
+      var term = req.query.term || void 0;
+      res.json({message: term});
+    }
     .delete(function(req, res) {
       stopStream(currentStream);
       res.json({message: 'stoping listeners'});
