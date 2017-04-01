@@ -6,20 +6,30 @@ import { HttpModule } from '@angular/http';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ShiftService } from './services/shift/shift.service';
-import { HomeComponent } from './pages/home/home.component';
-import { ErrorComponent } from './pages/error/error.component';
+// App views
+import {MainViewModule} from './views/main-view/main-view.module';
+import {MinorViewModule} from './views/minor-view/minor-view.module';
+import {LoginModule} from './views/login/login.module';
+import {RegisterModule} from './views/register/register.module';
+// App modules/components
+import {LayoutsModule} from './components/common/layouts/layouts.module';
 
 @NgModule({
   declarations: [
     AppComponent,
-    HomeComponent,
-    ErrorComponent
   ],
   imports: [
     BrowserModule,
     FormsModule,
     HttpModule,
-    AppRoutingModule
+    AppRoutingModule,
+    // Views
+    MainViewModule,
+    MinorViewModule,
+    LoginModule,
+    RegisterModule,
+    // Modules
+    LayoutsModule,
   ],
   providers: [ShiftService],
   bootstrap: [AppComponent]
