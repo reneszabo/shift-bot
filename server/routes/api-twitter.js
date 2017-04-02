@@ -1,9 +1,12 @@
 module.exports = function(io) {
   var Tweet = require('../db/model/Tweet');
+  var TwitterStream = require('../db/model/TwitterStream');
   const express = require('express');
   const router = express.Router();
   const Twitter = require('twitter');
   const Slack = require('../services/slack');
+  const uuidV1 = require('uuid/v1');
+  const globalVariables = require('./../global-variables');
   var slack = new Slack();
   var client = new Twitter({
     consumer_key: process.env.TWITTER_CONSUMER_KEY,
@@ -11,25 +14,34 @@ module.exports = function(io) {
     access_token_key: process.env.TWITTER_ACCESS_TOKEN_KEY,
     access_token_secret: process.env.TWITTER_ACCESS_TOKEN_SECRET
   });
-  var currentStream;
+
+  var arrayOfStream = [];
   // ENDPOINTS ROUTES
   router.get('/', function(req, res) {
     res.json('api twitter works');
   });
   router.route('/listen')
     .get(function(req, res) {
-      console.log('Twitter - get listen');
-      var term = req.query.term || void 0;
-      startStream(term);
-      res.json({message: term});
+      res.json(arrayOfStream);
     })
     .post(function(req, res) {
-      var term = req.query.term || void 0;
-      res.json({message: term});
-    }
+      console.log(req);
+      var term = req.body.term || void 0;
+      if (term) {
+        var twitterStreamEntity = new TwitterStream({term: term});
+        var streamObject = startStream(term);
+        res.json({id: streamObject.id, term: streamObject.term});
+      } else {
+        res.json({error: 'term not set'});
+      }
+    })
     .delete(function(req, res) {
-      stopStream(currentStream);
-      res.json({message: 'stoping listeners'});
+      console.log(req);
+      var id = req.body.id || void 0;
+      if (id) {
+        stopStream(id);
+      }
+      res.json({message: 'stoping listener - ' + id});
     });
 
   router.route('/callback')
@@ -45,9 +57,19 @@ module.exports = function(io) {
     });
 
   // STREAMS
-  function stopStream(stream) {
-    if (stream !== void 0) {
-      stream.destroy();
+  function stopStream(streamId) {
+    if (streamId !== void 0) {
+      var stream;
+      for (var i = arrayOfStream.length - 1; i >= 0; i--) {
+        if (arrayOfStream[i].id === streamId) {
+          stream = arrayOfStream[i].stream;
+          arrayOfStream.splice(i, 1);
+          break;
+        }
+      }
+      if (stream) {
+        stream.destroy();
+      }
     }
   }
   function startStream(term) {
@@ -55,12 +77,14 @@ module.exports = function(io) {
       return null;
     }
     stopStream(currentStream);
-    currentStream = client.stream('statuses/filter', {track: term});
+    var currentStream = client.stream('statuses/filter', {track: term});
     currentStream.on('data', streamSuccessHandler);
     currentStream.on('error', streamErrorHandler);
+    var streamObject = {id: uuidV1(), stream: currentStream, term: term};
+    arrayOfStream.push(streamObject);
+    return streamObject;
   }
   function streamSuccessHandler(data) {
-    // console.log(data);
     var tweet = {
       twid: data.id,
       active: false,
@@ -77,7 +101,9 @@ module.exports = function(io) {
       if (!err) {
         // If everything is cool, socket.io emits the tweet.
         io.emit('tweet', tweet);
-        slack.sendTweet(tweet);
+        if (globalVariables.slackActive) {
+          slack.sendTweet(tweet);
+        }
         //
       }
     });
