@@ -14,8 +14,8 @@ export class MainViewComponent implements OnDestroy {
 
   public twitterStreamsArray: Array<any> = [];
 
+  public tweetsLastFive: Array<any> = [];
   private tweetsSubscriber: ISubscription;
-  private tweetsLastFive: Array<any> = [];
 
 
   constructor(private _shift: ShiftService, private fb: FormBuilder, private _socket: SocketIoService) {
@@ -39,14 +39,9 @@ export class MainViewComponent implements OnDestroy {
   }
 
 
-  private createForm() {
-    console.log('createForm');
-    this.form = this.fb.group({
-      term: ['', [Validators.required]]
-    });
-  }
 
-  private onSubmit({ value, valid }: { value: any, valid: boolean }) {
+
+  public onSubmit({ value, valid }: { value: any, valid: boolean }) {
     console.log(value, valid);
     if ( !this.submissionInProgress && valid) {
       this.submissionInProgress = true;
@@ -61,7 +56,12 @@ export class MainViewComponent implements OnDestroy {
       });
     }
   }
-
+  private createForm() {
+    console.log('createForm');
+    this.form = this.fb.group({
+      term: ['', [Validators.required]]
+    });
+  }
   private reset() {
     console.log('reset form');
     this.form.reset({term: ''});

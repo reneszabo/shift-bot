@@ -5,7 +5,7 @@ import * as io from 'socket.io-client';
 @Injectable()
 export class SocketIoService {
   private socket;
-  private baseUri = 'http://shift.ramirez-portfolio.com:8082';
+  private baseUri = '';
   constructor() {
       this.socket = io.connect(this.baseUri, {secure: true});
         // this.socket.disconnect();

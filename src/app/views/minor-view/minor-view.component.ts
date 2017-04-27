@@ -16,18 +16,7 @@ export class minorViewComponent {
   public getStatus(){
     return this.slackStatus? 'OFF':'ON';
   }
-
-  private getSlackListenerStatus() {
-    this._shift.getSlackListener().subscribe((response) => {
-      console.log(response);
-      this.slackStatus = response.status;
-    }, (error) => {
-      console.log(error);
-    });
-  }
-
-
-  private toggleSlackListener() {
+  public toggleSlackListener() {
     console.log('toggle has be clicked');
     this._shift.postSlackListener().subscribe((response) => {
       console.log(response);
@@ -36,7 +25,13 @@ export class minorViewComponent {
       console.log(error);
     });
   }
-
-
+  private getSlackListenerStatus() {
+    this._shift.getSlackListener().subscribe((response) => {
+      console.log(response);
+      this.slackStatus = response.status;
+    }, (error) => {
+      console.log(error);
+    });
+  }
 
 }

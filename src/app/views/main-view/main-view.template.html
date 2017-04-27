@@ -13,97 +13,102 @@
   </div>
   <br>
   <div class="row">
-    <!--START MANAGEMENT-->
-    <div class="col-lg-12">
-      <div class="ibox">
-        <div class="ibox-title">
-          <h5>Manage</h5>
-        </div>
-        <div class="ibox-content">
-          <form [formGroup]="form"  (ngSubmit)="onSubmit(form)" (keydown.enter)="$event.preventDefault()"  novalidate="novalidate"  >
-            <div id="panel-twitter" class="panel panel-default">
-              <div class="panel-heading">
-                <h3 class="panel-title text-uppercase">Shift Twitter API</h3>
-              </div>
-              <div class="panel-body">
-                <div class="form-group row">
-                  <label for="twitter-term" class="col-sm-3 control-label text-uppercase">Twitter Term</label>
-                  <div class="col-sm-9">
-                    <input type="text" id="twitter-term" class="form-control" formControlName="term" placeholder="e.g., shiftshow, shift show" />
-                    <p>Form value: {{ form.value | json }}</p>
+
+
+    <div class="col-lg-8">
+      <!--START MANAGEMENT-->
+      <div class="col-lg-6">
+        <div class="ibox">
+          <div class="ibox-title">
+            <h5>Manage</h5>
+          </div>
+          <div class="ibox-content">
+            <form [formGroup]="form"  (ngSubmit)="onSubmit(form)" (keydown.enter)="$event.preventDefault()"  novalidate="novalidate"  >
+              <div id="panel-twitter" class="panel panel-default">
+                <div class="panel-heading">
+                  <h3 class="panel-title text-uppercase">Shift Twitter API</h3>
+                </div>
+                <div class="panel-body">
+                  <div class="form-group row">
+                    <label for="twitter-term" class="col-sm-3 control-label text-uppercase">Twitter Term</label>
+                    <div class="col-sm-9">
+                      <input type="text" id="twitter-term" class="form-control" formControlName="term" placeholder="e.g., shiftshow, shift show" />
+                      <p>Form value: {{ form.value | json }}</p>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-            <div class="form-group text-right">
-              <button type="submit"   class="btn-primary btn" [disabled]="submissionInProgress">send</button>
-            </div>
-          </form>
-        </div>
-      </div>
-    </div>
-    <!--END MANAGEMENT-->
-
-    <!--START STEAM LIST-->
-    <div class="col-lg-12">
-      <div class="ibox">
-        <div class="ibox-title">
-          <h5>Twitter Streams</h5>
-        </div>
-        <div class="ibox-content">
-          <table class="table table-bordered">
-            <thead>
-            <tr>
-              <th>Node JS Steam ID</th>
-              <th>Twitter String Listener</th>
-              <th>Actions</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr *ngFor="let steam of twitterStreamsArray">
-              <td>{{steam.id}}</td>
-              <td>{{steam.term}}</td>
-              <td><button class="btn btn-default" (click)="stopTwitterStream(steam)">Stop</button> </td>
-            </tr>
-            </tbody>
-          </table>
-
-        </div>
-      </div>
-    </div>
-    <!--END STEAM LIST-->
-
-
-    <!--START STEAM LIST-->
-    <div class="col-lg-12">
-      <div class="ibox">
-        <div class="ibox-title">
-          <h5>Last 5 Tweets</h5>
-        </div>
-        <div class="ibox-content">
-
-          <div *ngFor="let tweet of tweetsLastFive">
-            <h4>{{tweet.author}}</h4>
-            <table class="table tweet-table">
-              <tr>
-                <td>
-                  <img [src]="tweet.avatar" >
-                </td>
-                <td>
-                  <p>{{tweet.body}}</p>
-                </td>
-              </tr>
-            </table>
-            <div class="text-right">
-              <p>{{tweet.date | date: 'medium'}}</p>
-            </div>
+              <div class="form-group text-right">
+                <button type="submit"   class="btn-primary btn" [disabled]="submissionInProgress">send</button>
+              </div>
+            </form>
           </div>
-
         </div>
       </div>
-    </div>
-    <!--END STEAM LIST-->
+      <!--END MANAGEMENT-->
 
+      <!--START STEAM LIST-->
+      <div class="col-lg-6">
+        <div class="ibox">
+          <div class="ibox-title">
+            <h5>Twitter Streams</h5>
+          </div>
+          <div class="ibox-content">
+            <table class="table table-bordered">
+              <thead>
+              <tr>
+                <th>Node JS Steam ID</th>
+                <th>Twitter String Listener</th>
+                <th>Actions</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr *ngFor="let steam of twitterStreamsArray">
+                <td>{{steam.id}}</td>
+                <td>{{steam.term}}</td>
+                <td><button class="btn btn-default" (click)="stopTwitterStream(steam)">Stop</button> </td>
+              </tr>
+              </tbody>
+            </table>
+
+          </div>
+        </div>
+      </div>
+      <!--END STEAM LIST-->
+    </div>
+
+
+    <div class="col-lg-4">
+      <!--START TWEETS-->
+      <div class="col-lg-12">
+        <div class="ibox">
+          <div class="ibox-title">
+            <h5>Last 5 Tweets</h5>
+          </div>
+          <div class="ibox-content">
+
+            <div *ngFor="let tweet of tweetsLastFive">
+              <h4>{{tweet.author}}</h4>
+              <table class="table tweet-table">
+                <tr>
+                  <td>
+                    <img [src]="tweet.avatar" >
+                  </td>
+                  <td>
+                    <p>{{tweet.body}}</p>
+                  </td>
+                </tr>
+              </table>
+              <div class="text-right">
+                <p>{{tweet.date | date: 'medium'}}</p>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+      <!--END TWEETS-->
+    </div>
 
   </div>
 </div>

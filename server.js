@@ -46,7 +46,7 @@ app.get('*', function(req, res) {
 /**
  * Listen on provided port, on all network interfaces.
  */
-server.listen(port, function () {
+server.listen(port, function() {
   console.log('API running on localhost: ' +  port);
 });
 
